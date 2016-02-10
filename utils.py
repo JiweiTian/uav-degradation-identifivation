@@ -1,6 +1,14 @@
 import numpy as np
 import csv
 import sys
+import time
+import datetime
+
+import matplotlib
+matplotlib.use('pdf')
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+
 from dtw import dtw_distance
 
 def load_labelled(csv_file_path):
@@ -110,3 +118,47 @@ def get_distances(data, data_array, max_warping_window):
         a[i] = dist
         print str(i) + " - " + str(dist)
     return a
+
+# DTW labelling and plots
+
+def dtw_plots(dtws):
+    sorted_dtws = np.sort(dtws)
+
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H%M%S')
+
+    plt.plot(sorted_dtws, '-')
+    plt.xlabel('Experiment ID')
+    plt.ylabel('DTW Value')
+    plt.title('DTW value between first show and each other show')
+    plt.savefig('dtwValues_' + st + '.pdf')
+
+ #   plt.figure()
+ #   plt.hist(sorted_dtws, bins=20)
+ #   plt.xlabel('DTW Value')
+ #   plt.ylabel('Number of Experiments')
+ #   plt.title('Distribution of experiments grouped by DTW value')
+ #   plt.savefig('dtwHistogram_' + st + '.pdf')
+
+def get_label_for_value(value, good_limit, bad_limit):
+    label = -1
+    if value < good_limit:
+        label = 1
+    elif value < bad_limit:
+        label = 2
+    else:
+        label = 3
+    
+    return label
+
+def label_dtws(dtws, good_limit, bad_limit, outputFileName):
+    labels = np.zeros(len(dtws))
+    for i in range(0,len(dtws)):
+        labels[i] = get_label_for_value(dtws[i], good_limit, bad_limit)
+
+    with open(outputFileName, 'wb') as f:
+        writer = csv.writer(f)
+        for l in labels:
+            writer.writerow(str(int(l)))
+
+    print 'Labels: ' , labels

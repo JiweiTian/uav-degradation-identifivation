@@ -1,6 +1,6 @@
 import click
 from kNNDTW import KnnDtw
-from utils import load_labelled, load_test, get_distances
+from utils import load_labelled, load_test, get_distances, dtw_plots, label_dtws
 from trainer import Trainer
 
 @click.group()
@@ -110,7 +110,23 @@ def compute_dtw(data, dataarray, w):
 
     click.echo('\nRunning...')
 
-    unsorted_data_z_w = get_distances(timeserie_1[0], data_array=timeseries, max_warping_window=w)
+    unsorted_dtws = get_distances(timeserie_1[0], data_array=timeseries, max_warping_window=w)
+
+    # Save plots
+    dtw_plots(unsorted_dtws)
+    click.echo('Done. Plots have been saved.')
+
+    click.echo('Choose a maximum number for labelling good and bad data based on DTW values.')
+    click.echo('Check the plots to take better decsision.')
+    click.echo('  Example: If value for Good is 150, all data with DTW 0-150 will be labelled "Good".')
+    # Enter limit for 'Good'
+    good_value = raw_input(' > Enter a value for "Good" (Ex: 150) : ')
+    # Enter limit for 'Bad'
+    bad_value = raw_input(' > Enter a value for "Bad" (Ex: 350) : ')
+    # Print and save results to CSV
+    fileName = raw_input(' > Enter a file name (add .csv at the end) : ')
+
+    label_dtws(unsorted_dtws, int(good_value), int(bad_value), fileName)
 
     click.echo('\nDone.')
 

@@ -1,6 +1,6 @@
 import click
 from kNNDTW import KnnDtw
-from utils import load_labelled, load_test
+from utils import load_labelled, load_test, get_distances
 from trainer import Trainer
 
 @click.group()
@@ -8,8 +8,8 @@ def cli():
     pass
 
 @cli.command('findbestk')
-@click.option('-kmin', default=1, help='Minimum value for k Nearest Neighbours')
-@click.option('-kmax', default=5, help='Maximum value for k Nearest Neighbours')
+@click.option('--kmin', default=1, help='Minimum value for k Nearest Neighbours')
+@click.option('--kmax', default=5, help='Maximum value for k Nearest Neighbours')
 @click.option('-w', default=4000, help='Maximum Warping Window')
 @click.option('--seed', default=108, help='Seed for random shuffle')
 @click.option('--train', help='Training Data as CSV file path')
@@ -23,7 +23,7 @@ def find_best_k(kmin, kmax, w, seed, train):
 
     train_data, train_label = load_labelled(train)
 
-    click.echo('  - ks    : %d ' % ks)
+    click.echo('  - ks    : %s ' % str(ks))
     click.echo('  - w     : %d ' % w)
     click.echo('  - seed  : %d ' % seed)
     click.echo('  - train : %s ' % train)
@@ -37,23 +37,23 @@ def find_best_k(kmin, kmax, w, seed, train):
     click.echo('\nDone.')
 
 @cli.command('findbestw')
-@click.option('-wmin', default=100, help='Minimum value for Warping Window')
-@click.option('-wmax', default=4000, help='Maximum value for Warping Window')
+@click.option('--wmin', default=100, help='Minimum value for Warping Window')
+@click.option('--wmax', default=4000, help='Maximum value for Warping Window')
 @click.option('--step', default=100, help='Step for Warping Window')
 @click.option('-k', default=3, help='k Nearest Neighbours')
 @click.option('--seed', default=108, help='Seed for random shuffle')
 @click.option('--train', help='Training Data as CSV file path')
-def find_best_k(wmin, wmax, step, k, seed, train):
+def find_best_w(wmin, wmax, step, k, seed, train):
     click.echo('--- Find best w ---')
     
     wmin = int(min(wmin, wmax))
     wmax = int(max(wmin, wmax))
 
-    w = range(wmin, wmax, step)
+    ws = range(wmin, wmax, step)
 
     train_data, train_label = load_labelled(train)
 
-    click.echo('  - w     : %d ' % w)
+    click.echo('  - ws    : %s ' % str(ws))
     click.echo('  - k     : %d ' % k)
     click.echo('  - seed  : %d ' % seed)
     click.echo('  - train : %s ' % train)
@@ -62,7 +62,7 @@ def find_best_k(wmin, wmax, step, k, seed, train):
     click.echo('\nRunning...')
 
     trainer = Trainer(seed=seed, data=train_data, data_labels=train_label)
-    trainer.find_best_w(w, k)
+    trainer.find_best_w(k, ws)
 
     click.echo('\nDone.')
 
@@ -91,8 +91,31 @@ def predict(k, w, train, test):
     
     predicted_label, probability = model.predict(test_data)
     
-    print '\nPredicted label: ', predicted_label
+    click.echo('\nPredicted label : %s ' % str(predicted_label))
+    click.echo('\nDone.')
+
+@cli.command('dtw')
+@click.option('--data', help='Single timeseries data as CSV file path')
+@click.option('--dataarray', help='List of timeseries data as CSV file path')
+@click.option('-w', default=200, help='Maximum Warping Window')
+def compute_dtw(data, dataarray, w):
+    click.echo('--- Compute DTW ---')
+
+    timeseries, timeseries_label = load_labelled(dataarray)
+    timeserie_1 = load_test(data)
+
+    click.echo('  - data        : %s ' % data)
+    click.echo('  - dataarray   : %s ' % dataarray)
+    click.echo('  - w           : %d ' % w)
+
+    click.echo('\nRunning...')
+
+    unsorted_data_z_w = get_distances(timeserie_1[0], data_array=timeseries, max_warping_window=w)
+
     click.echo('\nDone.')
 
 if __name__ == '__main__':
    cli()
+
+
+

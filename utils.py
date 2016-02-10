@@ -1,6 +1,7 @@
 import numpy as np
 import csv
 import sys
+from dtw import dtw_distance
 
 def load_labelled(csv_file_path):
 
@@ -101,3 +102,11 @@ def evaluate(labels, label, test_label):
         print '--------------'
 
     return [accuracies.mean(), precisions.mean(), recalls.mean(), f1scores.mean()]
+
+def get_distances(data, data_array, max_warping_window):
+    a = np.zeros(len(data_array))
+    for i in range(0,len(data_array)):
+        dist = dtw_distance(data_array[i], data, max_warping_window)
+        a[i] = dist
+        print str(i) + " - " + str(dist)
+    return a

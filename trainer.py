@@ -81,11 +81,11 @@ class Trainer():
 
     def find_best_k(self, ks, max_warping_window):
         for index, k in enumerate(ks):
-            self.evaluate_model(k, max_warping_window, self.training_data, self.training_label, self.validation_data, self.validation_label_data)
+            self.evaluate_model(k, max_warping_window, self.training_data, self.training_label_data, self.validation_data, self.validation_label_data)
 
     def find_best_w(self, k, max_warping_windows):
         for index, w in enumerate(max_warping_windows):
-            self.evaluate_model(k, w, self.training_data, self.training_label, self.validation_data, self.validation_label_data)
+            self.evaluate_model(k, w, self.training_data, self.training_label_data, self.validation_data, self.validation_label_data)
 
     def evalute_best_model(k, max_warping_window):
         self.evaluate_model(k, max_warping_window, self.training_validation_data, self.training_validation_label_data, self.test_data, self.test_label_data)

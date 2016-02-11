@@ -6,6 +6,11 @@ It is implemented in Python and uses [Click][click]
 
 ## How to use
 
+Install the requirements using pip:
+
+    pip install -r requirements.txt
+
+
 Type this command to see all available commands:
 
     python droneML.py --help
@@ -31,10 +36,9 @@ Find the best warping window size `w` between the values 50, 100, 150, ..., unti
 
     python droneML.py findbestw --wmin 50 --wmax 500 --step 50 -k 1 --train 'data/uav_data_full_z.csv'
 
-
 Compute the DTW between one time series (`--data`) and one or more time series (`--datarray`).
 
-    python droneML.py dtw --data 'data/training_x_example.csv' --dataarray 'data/test_x_example.csv' -w 5
+    python droneML.py dtw --data 'data/training_x_example.csv' --dataarray 'data/test_x_example.csv' -w 500
 
 After compute all DTW, it will create and save plots in the same folder as the script and then ask you to input the limits for "Good" and "Bad" values. The output is a CSV file with the labels.
 

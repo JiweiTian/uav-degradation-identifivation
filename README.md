@@ -34,7 +34,7 @@ Find the best warping window size `w` between the values 50, 100, 150, ..., unti
 
 Compute the DTW between one time series (`--data`) and one or more time series (`--datarray`).
 
-    python droneML.py dtw --data 'data/training_x_example_1.csv' --dataarray 'data/test_x_example_1.csv' -w 5
+    python droneML.py dtw --data 'data/training_x_example.csv' --dataarray 'data/test_x_example.csv' -w 5
 
 After compute all DTW, it will create and save plots in the same folder as the script and then ask you to input the limits for "Good" and "Bad" values. The output is a CSV file with the labels.
 

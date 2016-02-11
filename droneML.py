@@ -131,7 +131,7 @@ def compute_dtw(data, dataarray, w):
     click.echo('\nDone.')
 
 if __name__ == '__main__':
-   cli()
+    cli()
 
 
 

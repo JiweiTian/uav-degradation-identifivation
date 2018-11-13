@@ -1,4 +1,4 @@
-# UAV Degradation Identification (Master Thesis)
+# UAV Degradation Identification
 
 This command line tool allows to run k Nearest Neighbour with DTW to train, evaluate and predict the label of flight data. The `data/` folder contains all the data ready to use for playing with this tool.
 
